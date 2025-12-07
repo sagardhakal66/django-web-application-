@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if category %}{{ category.name }} - {% endif %}Products - DjangoShop
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>
+                {% if category %}
+                    {{ category.name }}
+                {% else %}
+                    All Products
+                {% endif %}
+            </h1>
+            {% if category and category.description %}
+            <p class="text-muted">{{ category.description }}</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <!-- Search Form -->
+            <form method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" 
+                       placeholder="Search products..." value="{{ search_query }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar with Categories -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Categories</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'store:product_list' %}" 
+                       class="list-group-item list-group-item-action {% if not category %}active{% endif %}">
+                        All Categories
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{% url 'store:product_list_by_category' cat.slug %}" 
+                       class="list-group-item list-group-item-action {% if category and category.slug == cat.slug %}active{% endif %}">
+                        {{ cat.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="col-lg-9">
+            {% if search_query %}
+            <div class="alert alert-info">
+                Search results for: "<strong>{{ search_query }}</strong>"
+            </div>
+            {% endif %}
+
+            <div class="row">
+                {% for product in products %}
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div class="card product-card h-100 position-relative">
+                        {% if product.is_on_sale %}
+                        <span class="discount-badge">-{{ product.get_discount_percentage }}%</span>
+                        {% endif %}
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}https://via.placeholder.com/300x200?text=No+Image{% endif %}" 
+                             class="card-img-top" alt="{{ product.name }}" 
+                             style="height: 200px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <span class="h5 text-primary">${{ product.price }}</span>
+                                        {% if product.is_on_sale %}
+                                        <small class="text-muted text-decoration-line-through ms-2">${{ product.compare_price }}</small>
+                                        {% endif %}
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-box me-1"></i>{{ product.stock }} left
+                                    </small>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'store:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View Details
+                                    </a>
+                                    {% if user.is_authenticated and product.stock > 0 %}
+                                    <a href="{% url 'cart:add_to_cart' product.id %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                                    </a>
+                                    {% elif product.stock == 0 %}
+                                    <button class="btn btn-secondary btn-sm" disabled>
+                                        <i class="fas fa-times me-1"></i>Out of Stock
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        No products found{% if search_query %} matching your search{% endif %}.
+                    </div>
+                    <a href="{% url 'store:product_list' %}" class="btn btn-primary">View All Products</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

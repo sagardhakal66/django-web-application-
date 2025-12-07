@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Trishuli Developers and Suppliers Pvt. Ltd{% endblock %}
+
+{% block content %}
+<!-- Hero / Banner Section -->
+<section class="hero-section position-relative text-white" style="background: url('https://source.unsplash.com/1600x600/?warehouse,store') center/cover no-repeat; height: 550px;">
+    <div class="overlay" style="background: rgba(0,0,0,0.5); height: 100%; width: 100%; position: absolute; top:0; left:0;"></div>
+    <div class="container h-100 d-flex flex-column justify-content-center align-items-start position-relative">
+        <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInLeft">Premium Products, Trusted Suppliers</h1>
+        <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">Discover the best industrial and consumer products with Trishuli Developers and Suppliers Pvt. Ltd.</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg shadow-lg animate__animated animate__fadeInLeft animate__delay-2s">
+            Shop Now <i class="fas fa-shopping-cart ms-2"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Categories Highlight Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Browse by Category</h2>
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'store:product_list_by_category' category.slug %}" class="text-decoration-none">
+                    <div class="card category-card h-100 shadow-sm border-0 text-center hover-scale p-3">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-boxes fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title fw-bold">{{ category.name }}</h5>
+                            <p class="text-muted small">Explore top products in {{ category.name }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No categories available yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Promotional Banner Section -->
+<section class="py-5 position-relative">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <div class="p-5 bg-primary text-white rounded shadow-lg animate__animated animate__fadeInLeft">
+                    <h3>Special Offers on Bulk Orders</h3>
+                    <p>Get up to 20% discount on large orders. Limited time offer!</p>
+                    <a href="{% url 'store:product_list' %}" class="btn btn-light mt-3">Shop Now</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://source.unsplash.com/600x400/?warehouse,products" alt="Promotions" class="img-fluid rounded shadow-lg animate__animated animate__fadeInRight">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h2 class="fw-bold">Featured Products</h2>
+            <a href="{% url 'store:product_list' %}" class="btn btn-outline-primary">View All</a>
+        </div>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card product-card shadow-sm border-0 h-100 position-relative hover-scale">
+                    {% if product.is_on_sale %}
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-2 p-2 fw-bold">-{{ product.get_discount_percentage }}%</span>
+                    {% endif %}
+                    <img src="{% if product.image %}{{ product.image.url }}{% else %}https://via.placeholder.com/300x200?text=No+Image{% endif %}" 
+                         class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">{{ product.name|truncatewords:4 }}</h5>
+                        <p class="card-text text-muted small">{{ product.description|truncatewords:10 }}</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="h5 text-primary fw-bold">${{ product.price }}</span>
+                                    {% if product.is_on_sale %}
+                                    <small class="text-muted text-decoration-line-through ms-2">${{ product.compare_price }}</small>
+                                    {% endif %}
+                                </div>
+                                <small class="text-muted">
+                                    <i class="fas fa-box me-1"></i>{{ product.stock }} left
+                                </small>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'store:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                                {% if user.is_authenticated and product.stock > 0 %}
+                                <a href="{% url 'cart:add_to_cart' product.id %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                                </a>
+                                {% elif product.stock == 0 %}
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    <i class="fas fa-times me-1"></i>Out of Stock
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>No featured products available.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Add Custom CSS -->
+<style>
+.hero-section h1, .hero-section p {
+    text-shadow: 1px 1px 10px rgba(0,0,0,0.6);
+}
+.hover-scale:hover {
+    transform: translateY(-5px) scale(1.05);
+    transition: all 0.3s ease;
+}
+.category-card, .product-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+</style>
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% endblock %}

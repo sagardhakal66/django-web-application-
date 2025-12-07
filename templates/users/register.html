@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register | DjangoShop{% endblock %}
+
+{% block content %}
+
+<!-- ====== Premium Animated Background ====== -->
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at top left, #0f0c29, #302b63, #24243e);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Floating glowing shapes */
+    .circle {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.65;
+        animation: float 8s infinite ease-in-out;
+    }
+    .circle.one { width: 350px; height: 350px; background: #ff0099; top: -50px; left: -70px; }
+    .circle.two { width: 300px; height: 300px; background: #00eaff; bottom: -70px; right: -40px; }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-25px); }
+    }
+
+    /* Glass Card */
+    .register-card {
+        width: 100%;
+        max-width: 650px;
+        background: rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(15px);
+        border-radius: 18px;
+        padding: 40px;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .register-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+        color: #fff;
+    }
+
+    .register-btn {
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        background: linear-gradient(135deg, #ff0099, #493240);
+        border: none;
+        color: white;
+        transition: 0.35s;
+        box-shadow: 0 5px 15px rgba(255, 0, 150, 0.4);
+    }
+
+    .register-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 0, 150, 0.6);
+    }
+
+    .text-link {
+        color: #7ddfff !important;
+        text-decoration: none;
+        transition: 0.3s ease;
+    }
+
+    .text-link:hover {
+        color: #fff !important;
+        text-shadow: 0 0 8px #7ddfff;
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 95vh;
+        padding: 20px;
+        position: relative;
+        z-index: 10;
+    }
+</style>
+
+<!-- Floating glowing circles -->
+<div class="circle one"></div>
+<div class="circle two"></div>
+
+<div class="wrapper">
+    <div class="register-card">
+
+        <h2 class="register-title">
+            <i class="fas fa-user-plus me-2"></i> Create Your Account
+        </h2>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.username|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.email|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.password1|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.password2|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.user_type|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.phone_number|as_crispy_field }}
+                </div>
+            </div>
+
+            {{ form.address|as_crispy_field }}
+
+            <button type="submit" class="register-btn mt-3">
+                <i class="fas fa-user-plus me-2"></i> Create Account
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="mb-0 text-light">Already have an account?
+                <a href="{% url 'users:login' %}" class="text-link fw-bold">
+                    Sign in here
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

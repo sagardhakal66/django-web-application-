@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login | DjangoShop{% endblock %}
+
+{% block content %}
+
+<!-- ====== Premium Animated Background ====== -->
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at top left, #0f0c29, #302b63, #24243e);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Floating gradient circles */
+    .circle {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.65;
+        animation: float 8s infinite ease-in-out;
+    }
+    .circle.one { width: 350px; height: 350px; background: #ff0099; top: -50px; left: -70px; }
+    .circle.two { width: 300px; height: 300px; background: #00eaff; bottom: -70px; right: -40px; }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-25px); }
+    }
+
+    /* Glassmorphism Card */
+    .login-card {
+        width: 100%;
+        max-width: 430px;
+        background: rgba(255, 255, 255, 0.13);
+        border-radius: 18px;
+        padding: 40px;
+        color: #fff;
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+    }
+
+    .login-btn {
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        background: linear-gradient(135deg, #ff0099, #493240);
+        border: none;
+        color: white;
+        transition: 0.35s;
+        box-shadow: 0 5px 15px rgba(255, 0, 150, 0.4);
+    }
+
+    .login-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 0, 150, 0.6);
+    }
+
+    .text-link {
+        color: #7ddfff !important;
+        text-decoration: none;
+        transition: 0.3s ease;
+    }
+
+    .text-link:hover {
+        color: #fff !important;
+        text-shadow: 0 0 8px #7ddfff;
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        padding: 20px;
+        position: relative;
+        z-index: 10;
+    }
+</style>
+
+<!-- Background Floating Elements -->
+<div class="circle one"></div>
+<div class="circle two"></div>
+
+<div class="wrapper">
+    <div class="login-card">
+
+        <h2 class="login-title"><i class="fas fa-user-circle me-2"></i>Sign In</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <button type="submit" class="login-btn mt-3">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'users:password_reset' %}" class="text-link">
+                Forgot Password?
+            </a>
+        </div>
+
+        <div class="text-center mt-3">
+            <p class="text-light">Don't have an account?
+                <a href="{% url 'users:register' %}" class="text-link fw-bold">Register</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

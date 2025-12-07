@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard - DjangoShop{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <!-- User Profile Card -->
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <div class="position-relative">
+                        {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile" 
+                             class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 100px; height: 100px;">
+                            <i class="fas fa-user fa-2x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <h5 class="mb-1">{{ user.get_full_name|default:user.username }}</h5>
+                    <p class="mb-0 small">@{{ user.username }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-envelope me-2 text-primary"></i>Email</span>
+                            <span class="text-muted">{{ user.email }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-phone me-2 text-success"></i>Phone</span>
+                            <span class="text-muted">{{ user.phone_number|default:"Not set" }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-user-tag me-2 text-info"></i>Member Since</span>
+                            <span class="text-muted">{{ user.date_joined|date:"M Y" }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-clock me-2 text-warning"></i>Last Login</span>
+                            <span class="text-muted">{{ user.last_login|timesince }} ago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'users:profile' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- Welcome Card -->
+            <div class="card shadow mb-4">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-shopping-bag fa-3x text-primary mb-3"></i>
+                    <h3>Welcome to Your Dashboard, {{ user.username }}!</h3>
+                    <p class="text-muted mb-4">
+                        Thank you for being a valued customer at DjangoShop. 
+                        Here you can manage your profile and track your activities.
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{% url 'store:product_list' %}" class="btn btn-primary me-md-2">
+                            <i class="fas fa-shopping-bag me-2"></i>Start Shopping
+                        </a>
+                        <a href="{% url 'cart:cart_view' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-shopping-cart me-2"></i>View Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-primary text-white text-center">
+                        <div class="card-body">
+                            <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                            <h5>Cart Items</h5>
+                            <h3>{{ cart_items_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-success text-white text-center">
+                        <div class="card-body">
+                            <i class="fas fa-heart fa-2x mb-2"></i>
+                            <h5>Wishlist</h5>
+                            <h3>0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-info text-white text-center">
+                        <div class="card-body">
+                            <i class="fas fa-box-open fa-2x mb-2"></i>
+                            <h5>Orders</h5>
+                            <h3>0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="fas fa-clock fa-2x text-muted mb-3"></i>
+                        <h6 class="text-muted">No Recent Activity</h6>
+                        <p class="text-muted small">
+                            Your recent activities such as orders, cart updates, and product views will appear here.
+                        </p>
+                        <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline-primary">
+                            Start Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
