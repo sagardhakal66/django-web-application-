@@ -59,7 +59,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'store.context_processors.categories',
+                'store.context_processors.categories',           # Categories context
+                'store.context_processors.currency_settings',    # Currency context
                 'cart.context_processors.cart',
             ],
         },
@@ -86,9 +87,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kathmandu'  # Nepal time zone
 USE_I18N = True
 USE_TZ = True
+
+# ========== USD CURRENCY SETTINGS ==========
+CURRENCY_SYMBOL = '$'           # Display symbol: $
+CURRENCY_CODE = 'USD'           # Currency code: USD
+CURRENCY_NAME = 'US Dollars'
+CURRENCY_SYMBOL_HTML = '$'      # Dollar symbol
+DECIMAL_PLACES = 2              # Decimal places for prices
+# ===========================================
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
